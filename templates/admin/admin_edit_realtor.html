@@ -1,0 +1,105 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Edit Realtor{% endblock %}
+{% block page_title %}Edit Realtor{% endblock %}
+{% block nav_realtors %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .form-section h5 {
+        color: #1a1a1a;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #0d6efd;
+    }
+    
+    .photo-preview {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 200px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Edit Realtor</h1>
+        <p>Update realtor information and profile.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-section">
+            <h5><i class="fas fa-user-tie"></i> Realtor Information</h5>
+            
+            <div class="mb-3">
+                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ realtor.name }}" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ realtor.email }}" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ realtor.phone }}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4">{{ realtor.description }}</textarea>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="is_mvp" name="is_mvp" {% if realtor.is_mvp %}checked{% endif %}>
+                <label class="form-check-label" for="is_mvp">
+                    <i class="fas fa-star text-warning"></i> Mark as MVP (Most Valuable Professional)
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h5><i class="fas fa-image"></i> Profile Photo</h5>
+            
+            {% if realtor.photo %}
+                <div class="mb-4">
+                    <p class="text-muted mb-2">Current Photo:</p>
+                    <img src="{{ realtor.photo.url }}" alt="{{ realtor.name }}" class="photo-preview">
+                </div>
+            {% endif %}
+            
+            <div class="mb-3">
+                <label for="photo" class="form-label">Update Photo</label>
+                <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                <small class="form-text text-muted">Leave empty to keep the current photo</small>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-save"></i> Update Realtor
+            </button>
+            <a href="{% url 'admin_realtors' %}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+{% endblock %}

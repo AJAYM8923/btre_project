@@ -1,0 +1,75 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Realtors{% endblock %}
+{% block page_title %}All Realtors{% endblock %}
+{% block nav_realtors %}active{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>All Realtors</h1>
+        <p>Manage real estate agents and their profiles.</p>
+    </div>
+
+    <div class="mb-3 d-flex justify-content-end">
+        <a href="{% url 'admin_add_realtor' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Realtor
+        </a>
+    </div>
+
+    <div class="table-wrapper">
+        {% if realtors %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>MVP</th>
+                            <th>Hired</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for realtor in realtors %}
+                            <tr>
+                                <td>
+                                    {% if realtor.photo %}
+                                        <img src="{{ realtor.photo.url }}" alt="{{ realtor.name }}" class="rounded" style="width: 45px; height: 45px; object-fit: cover;">
+                                    {% else %}
+                                        <span class="badge bg-secondary">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ realtor.name }}</strong></td>
+                                <td>{{ realtor.email }}</td>
+                                <td>{{ realtor.phone }}</td>
+                                <td>
+                                    {% if realtor.is_mvp %}
+                                        <span class="badge bg-warning"><i class="fas fa-star"></i> MVP</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Regular</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ realtor.hire_date|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'admin_edit_realtor' realtor.id %}" class="btn btn-sm btn-warning" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'admin_delete_realtor' realtor.id %}" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-person"></i>
+                <p>No realtors found. <a href="{% url 'admin_add_realtor' %}" class="btn btn-sm btn-primary">Create one now</a></p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

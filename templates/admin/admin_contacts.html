@@ -1,0 +1,62 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Contacts{% endblock %}
+{% block page_title %}Contact Inquiries{% endblock %}
+{% block nav_contacts %}active{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Contact Inquiries</h1>
+        <p>All contact inquiries from website visitors and buyers.</p>
+    </div>
+
+    <div class="table-wrapper">
+        {% if contacts %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Listing</th>
+                            <th>Message Preview</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contact in contacts %}
+                            <tr>
+                                <td><strong>{{ contact.name }}</strong></td>
+                                <td>
+                                    <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                                </td>
+                                <td>
+                                    <a href="tel:{{ contact.phone }}">{{ contact.phone }}</a>
+                                </td>
+                                <td>
+                                    {% if contact.listing %}
+                                        <span class="badge bg-primary">{{ contact.listing.title|truncatewords:3 }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">General</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small>{{ contact.message|truncatewords:10 }}</small>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ contact.contact_date|date:"M d, Y H:i" }}</small>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-envelope"></i>
+                <p>No contact inquiries found.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

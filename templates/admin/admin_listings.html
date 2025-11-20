@@ -1,0 +1,89 @@
+{% extends 'admin/admin_base.html' %}
+{% load humanize %}
+
+{% block title %}Listings{% endblock %}
+{% block page_title %}All Listings{% endblock %}
+{% block nav_listings %}active{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>All Listings</h1>
+        <p>Manage and view all property listings in the system.</p>
+    </div>
+
+    <div class="mb-3 d-flex justify-content-end">
+        <a href="{% url 'admin_add_listing' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Listing
+        </a>
+    </div>
+
+    <div class="table-wrapper">
+        {% if listings %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>Bedrooms</th>
+                            <th>Bathrooms</th>
+                            <th>Photo</th>
+                            <th>Published</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for listing in listings %}
+                        <tr>
+                            <td><span class="badge bg-primary">{{ forloop.counter }}</span></td>
+                            <td><strong>{{ listing.title }}</strong></td>
+                            <td><span class="badge bg-success">${{ listing.price|intcomma }}</span></td>
+                            <td>{{ listing.address }}</td>
+                            <td>{{ listing.city }}</td>
+                            <td>{{ listing.bedrooms }}</td>
+                            <td>{{ listing.bathrooms }}</td>
+
+                            <td>
+                                {% if listing.photo_main %}
+                                    <img src="{{ listing.photo_main.url }}" width="60" height="45" style="object-fit: cover; border-radius: 4px;">
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if listing.is_published %}
+                                    <span class="badge bg-success"><i class="fas fa-check"></i> Yes</span>
+                                {% else %}
+                                    <span class="badge bg-danger"><i class="fas fa-times"></i> No</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <a href="{% url 'admin_view_listing' listing.id %}" class="btn btn-sm btn-primary" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'admin_edit_listing' listing.id %}" class="btn btn-sm btn-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'admin_delete_listing' listing.id %}" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No listings found. <a href="{% url 'admin_add_listing' %}" class="btn btn-sm btn-primary">Create one now</a></p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

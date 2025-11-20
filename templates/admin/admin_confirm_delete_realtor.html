@@ -1,0 +1,42 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Delete Realtor{% endblock %}
+{% block page_title %}Delete Realtor{% endblock %}
+{% block nav_realtors %}active{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Delete Realtor</h1>
+        <p>Confirm deletion of this realtor profile.</p>
+    </div>
+
+    <div class="admin-card" style="max-width: 600px;">
+        <div class="admin-card-body text-center">
+            <div style="font-size: 3rem; color: #dc3545; margin-bottom: 20px;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            
+            <h3 class="mb-3">Are you sure?</h3>
+            <p class="text-muted mb-4">
+                This action cannot be undone. You are about to permanently delete the realtor profile:
+            </p>
+            
+            <div class="alert alert-light border-2 border-warning mb-4">
+                <h5 class="mb-2"><strong>{{ realtor.name }}</strong></h5>
+                <small class="text-muted">{{ realtor.email }} | {{ realtor.phone }}</small>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-trash"></i> Yes, Delete Permanently
+                    </button>
+                    <a href="{% url 'admin_realtors' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

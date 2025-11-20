@@ -1,0 +1,63 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Users{% endblock %}
+{% block page_title %}All Users{% endblock %}
+{% block nav_users %}active{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>All Users</h1>
+        <p>Manage system users and their permissions.</p>
+    </div>
+
+    <div class="table-wrapper">
+        {% if users %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Full Name</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td><span class="badge bg-secondary">{{ user.id }}</span></td>
+                            <td><strong>{{ user.username }}</strong></td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="badge bg-success"><i class="fas fa-check"></i> Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger"><i class="fas fa-times"></i> Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                            <td>
+                                {% if user.is_superuser %}
+                                    <span class="badge bg-info me-2">Admin</span>
+                                {% endif %}
+                                <a href="{% url 'admin_delete_user' user.id %}" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <p>No users found in the system.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

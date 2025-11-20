@@ -1,0 +1,166 @@
+{% extends 'admin/admin_base.html' %}
+{% load humanize %}
+
+{% block title %}{{ listing.title }}{% endblock %}
+{% block page_title %}View Listing{% endblock %}
+{% block nav_listings %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    .listing-detail {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 25px;
+    }
+    
+    .detail-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .detail-item {
+        border-left: 3px solid #0d6efd;
+        padding-left: 15px;
+    }
+    
+    .detail-item label {
+        color: #6c757d;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .detail-item p {
+        margin: 5px 0 0 0;
+        font-size: 1.1rem;
+        color: #1a1a1a;
+    }
+    
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .gallery-item {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        aspect-ratio: 4/3;
+    }
+    
+    .gallery-item:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ listing.title }}</h1>
+        <p>{{ listing.address }}, {{ listing.city }}, {{ listing.state }} {{ listing.zipcode }}</p>
+    </div>
+
+    <div class="mb-3 d-flex gap-2">
+        <a href="{% url 'admin_edit_listing' listing.id %}" class="btn btn-warning btn-lg">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'admin_delete_listing' listing.id %}" class="btn btn-danger btn-lg">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        <a href="{% url 'admin_listings' %}" class="btn btn-secondary btn-lg">
+            <i class="fas fa-arrow-left"></i> Back to Listings
+        </a>
+    </div>
+
+    <div class="listing-detail">
+        <h5 class="mb-3"><i class="fas fa-info-circle"></i> Listing Information</h5>
+        
+        <p class="lead text-muted mb-4">{{ listing.description }}</p>
+        
+        <div class="detail-row">
+            <div class="detail-item">
+                <label>Price</label>
+                <p class="text-success" style="font-size: 1.5rem; font-weight: 700;">${{ listing.price|intcomma }}</p>
+            </div>
+            <div class="detail-item">
+                <label>Status</label>
+                <p>
+                    {% if listing.is_published %}
+                        <span class="badge bg-success"><i class="fas fa-check"></i> Published</span>
+                    {% else %}
+                        <span class="badge bg-warning"><i class="fas fa-exclamation"></i> Draft</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="detail-item">
+                <label>Realtor</label>
+                <p>{{ listing.realtor }}</p>
+            </div>
+            <div class="detail-item">
+                <label>Listed Date</label>
+                <p>{{ listing.list_date|date:"M d, Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="listing-detail">
+        <h5 class="mb-3"><i class="fas fa-home"></i> Property Details</h5>
+        
+        <div class="detail-row">
+            <div class="detail-item">
+                <label>Bedrooms</label>
+                <p>{{ listing.bedrooms }}</p>
+            </div>
+            <div class="detail-item">
+                <label>Bathrooms</label>
+                <p>{{ listing.bathrooms }}</p>
+            </div>
+            <div class="detail-item">
+                <label>Square Feet</label>
+                <p>{{ listing.sqft|intcomma }} sqft</p>
+            </div>
+            <div class="detail-item">
+                <label>Garage</label>
+                <p>{{ listing.garage }}</p>
+            </div>
+            <div class="detail-item">
+                <label>Lot Size</label>
+                <p>{{ listing.lot_size }}</p>
+            </div>
+            <div class="detail-item">
+                <label>Year Built</label>
+                <p>{{ listing.year_built|default:"N/A" }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% if imgs %}
+        <div class="listing-detail">
+            <h5 class="mb-3"><i class="fas fa-images"></i> Property Photos</h5>
+            
+            <div class="gallery">
+                {% for img in imgs %}
+                    {% if img %}
+                        <div class="gallery-item">
+                            <img src="{{ img.url }}" alt="Property Photo">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
